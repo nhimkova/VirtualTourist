@@ -18,6 +18,8 @@ class InitialViewController: UIViewController, MKMapViewDelegate, NSFetchedResul
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        
+        
         self.mapView.delegate = self
         configUI()
         
@@ -30,6 +32,22 @@ class InitialViewController: UIViewController, MKMapViewDelegate, NSFetchedResul
         fetchedResultsController.delegate = self
         
         fetchPins()
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        
+        let mapDetails = NSUserDefaults.standardUserDefaults()
+        let latitude = Float(mapView.centerCoordinate.latitude)
+        let longitude = Float(mapView.centerCoordinate.longitude)
+        let latitudeDelta = Float(mapView.region.span.latitudeDelta)
+        let longitudeDelta = Float(mapView.region.span.longitudeDelta)
+        
+        mapDetails.setValue(latitude, forKey: "latitude")
+        mapDetails.setValue(longitude, forKey: "longitude")
+        mapDetails.setValue(latitudeDelta, forKey: "latitudeDelta")
+        mapDetails.setValue(longitudeDelta, forKey: "longitudeDelta")
+
+        print("SAVED: lat: \(latitude), long: \(longitude), latD: \(latitudeDelta), longD: \(longitudeDelta)")
     }
     
     override func viewDidDisappear(animated: Bool) {
@@ -61,14 +79,32 @@ class InitialViewController: UIViewController, MKMapViewDelegate, NSFetchedResul
     // %%%%%%%%%%%%%%%        Map View config and Pin methods       %%%%%%%%%%%%%%
     
     func configUI()  {
-    
-        let initialLocation = CLLocation(latitude: 51.5072, longitude: 0.1275) //Userdefaults
-        let regionRadius: CLLocationDistance = 1000 //Userdefaults
         
-        //Set initial map view
-        let coordinateRegion = MKCoordinateRegionMakeWithDistance(initialLocation.coordinate,
-            regionRadius * 2.0, regionRadius * 2.0)
-        mapView.setRegion(coordinateRegion, animated: true)
+        //get user defaults
+        let mapDetails = NSUserDefaults.standardUserDefaults()
+        var latitude = mapDetails.doubleForKey("latitude")
+        var longitude = mapDetails.doubleForKey("longitude")
+        var latitudeDelta = mapDetails.doubleForKey("latitudeDelta")
+        var longitudeDelta = mapDetails.doubleForKey("longitudeDelta")
+        
+        print("RETRIVED: lat: \(latitude), long: \(longitude), latD: \(latitudeDelta), longD: \(longitudeDelta)")
+        
+        if (latitude * longitude == 0) {
+            
+            latitude = 51.5072
+            longitude = 0.1275
+            latitudeDelta = 0.5
+            longitudeDelta = 0.5
+        }
+        
+        var span = MKCoordinateSpan()
+        span.latitudeDelta = latitudeDelta / 2.0
+        span.longitudeDelta = longitudeDelta / 2.0
+        var region = MKCoordinateRegion()
+        region.center = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+        region.span = span
+        
+        mapView.setRegion(region, animated: true)
         
         //Add long press gesture recognizer
         let longPress = UILongPressGestureRecognizer(target: self, action: "addPin:")

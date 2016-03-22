@@ -14,6 +14,8 @@ import CoreData
 class LocationViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, NSFetchedResultsControllerDelegate {
     
     
+    @IBOutlet var toolBarButton: UIBarButtonItem!
+    
     @IBOutlet var smallMapView: MKMapView!
     
     @IBOutlet var collectionView: UICollectionView!
@@ -61,48 +63,30 @@ class LocationViewController: UIViewController, UICollectionViewDelegate, UIColl
             } else {
                 
                 if let photosDictionary = result.valueForKey("photos") as? [String : AnyObject] {
-                    //find number of pages
-                    if let pagesInt = photosDictionary["pages"] as? Int {
+                    
+                    if let photos = photosDictionary["photo"] as? [[String : AnyObject]] {
                         
-                        let pages = UInt32(pagesInt)
+                        //Select random photos
+                        var selectedPhotos : [[String : AnyObject]] = []
+                        print("Total photos: \(photos.count)")
+                        let count = min(photos.count, 21)
                         
-                        //generage random page number
-                        let randomPage = arc4random_uniform(pages) + 1
-                        print("Random page: \(randomPage)")
+                        for _ in 0...count {
+                            let randomPhotoIndex = Int(arc4random_uniform(UInt32(photos.count)))
                             
-                        //get images for page
-                        FlickrClient.sharedInstance().taskForImagesAtPage( (self.thisPin?.latitude)!, longitude: (self.thisPin?.longitude)!, page: Int(randomPage) ) { (JSONresult, error) in
+                            selectedPhotos.append(photos[randomPhotoIndex])
+                            
+                        }
                         
-                            if (error != nil) {
-                                
-                                print("flickr image at page error")
-                                
-                            } else {
-                                if let photosDictionary = JSONresult.valueForKey("photos") as? [String : AnyObject] {
-                                    if let photos = photosDictionary["photo"] as? [[String : AnyObject]] {
-                                        
-                                        let _ = photos.map() { (dictionary: [String : AnyObject]) -> Image in
+                        let _ = selectedPhotos.map() { (dictionary: [String : AnyObject]) -> Image in
                                             
-                                            let image = Image(dictionary: dictionary, context: self.sharedContext)
-                                            image.pin = self.thisPin
-                                            return image
-                                        }
+                            let image = Image(dictionary: dictionary, context: self.sharedContext)
+                            image.pin = self.thisPin
+                            return image
+                        }
                                         
-                                    } // if let photos
-                                    
-                                    // Update the collection view on the main thread
-                                    dispatch_async(dispatch_get_main_queue()) {
-                                        self.collectionView.reloadData()
-                                    }
+                    } // if let photos
 
-                                } // photosDictionary
-                                
-                            } //else if no error
-                        
-                        } // taskForImagesAtPage
-                        
-                    } //pagesString
-                
                 } //photosDictionary
                 
             } //else if no error
@@ -135,18 +119,57 @@ class LocationViewController: UIViewController, UICollectionViewDelegate, UIColl
         
     }
     
-    // %%%%%%%%%%%%%%%        New Collection       %%%%%%%%%%%%%%
+    // %%%%%%%%%%%%%%%        New Collection  / Delete photos    %%%%%%%%%%%%%%
     
     @IBAction func didPushNewCollection(sender: AnyObject) {
         
-        //delete old images in core data
-        for item in fetchedResultsController.fetchedObjects as! [Image] {
-            sharedContext.deleteObject(item)
+        //delete selected photos
+        if (selectedIndexes.count > 0) {
+            
+            var selectedImages : [Image] = []
+            
+            for indexPath in selectedIndexes {
+                
+                let selectedImage = fetchedResultsController.objectAtIndexPath(indexPath) as! Image
+                selectedImages.append(selectedImage)
+                
+                // Delete Images on the local disk
+                print("URL to REMOVE: \(selectedImage.url)")
+                
+                let path = FlickrClient.Caches.imageCache.pathForIdentifier(selectedImage.url)
+
+                do {
+                    try NSFileManager.defaultManager().removeItemAtPath(path)
+                }
+                catch let error as NSError {
+                    print("Cannot delete file at path \(path) because \(error)")
+                }
+                
+            }
+            
+            for item in selectedImages {
+                sharedContext.deleteObject(item)
+                toolBarButton.title = "New Collection"
+            }
+            
+            selectedIndexes = [NSIndexPath]()
+            //collectionView.reloadData()
+            CoreDataStackManager.sharedInstance().saveContext()
+            
+        } else {
+        
+            //delete all images in core data
+            for item in fetchedResultsController.fetchedObjects as! [Image] {
+                sharedContext.deleteObject(item)
+            }
+            
+            CoreDataStackManager.sharedInstance().saveContext()
+            
+            collectionView.reloadData()
+        
+            searchFlickr()
         }
         
-        collectionView.reloadData()
-        
-        searchFlickr()
         
     }
     
@@ -194,6 +217,14 @@ class LocationViewController: UIViewController, UICollectionViewDelegate, UIColl
         
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("ImageCell", forIndexPath: indexPath) as! ImageCollectionViewCell
         
+        if let _ = selectedIndexes.indexOf(indexPath) {
+            cell.overlay.hidden = false
+            cell.bringSubviewToFront(cell.overlay)
+            cell.overlay.alpha = 0.8
+        } else {
+            cell.overlay.hidden = true
+        }
+        
         let image = fetchedResultsController.objectAtIndexPath(indexPath) as! Image
         
         configCell(cell, image: image)
@@ -201,7 +232,39 @@ class LocationViewController: UIViewController, UICollectionViewDelegate, UIColl
         return cell
     }
     
+    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+            
+        let cell = collectionView.cellForItemAtIndexPath(indexPath) as! ImageCollectionViewCell
+        
+        if let index = selectedIndexes.indexOf(indexPath) {
+            selectedIndexes.removeAtIndex(index)
+            cell.overlay.hidden = true
+        } else {
+            selectedIndexes.append(indexPath)
+            cell.overlay.hidden = false
+            cell.bringSubviewToFront(cell.overlay)
+            cell.overlay.alpha = 0.8
+        }
+        
+        //Change UI
+        if (selectedIndexes.count > 0) {
+            
+            toolBarButton.title = "Delete Selected Photos"
+            
+        } else {
+            
+            toolBarButton.title = "New Collection"
+        }
+            
+    }
+    
     func configCell(cell: ImageCollectionViewCell, image: Image) {
+        
+        cell.imageView.layer.cornerRadius = 6
+        cell.imageView.clipsToBounds = true
+        cell.imageView.hidden = false
+        cell.imageView.alpha = 1
+        cell.imageView.image = UIImage(named: "placeholder")
         
         cell.activityIndicator.hidden = true
         
@@ -213,7 +276,8 @@ class LocationViewController: UIViewController, UICollectionViewDelegate, UIColl
             })
             
         } else {
-        
+            
+            cell.bringSubviewToFront(cell.activityIndicator)
             cell.activityIndicator.startAnimating()
             cell.activityIndicator.hidden = false
         
@@ -226,8 +290,12 @@ class LocationViewController: UIViewController, UICollectionViewDelegate, UIColl
                 } else {
                     
                     dispatch_async(dispatch_get_main_queue(), {
+                    
+                        self.toolBarButton.title = "New Collection"
                         
                         image.flickrResult = flickrImage
+                        CoreDataStackManager.sharedInstance().saveContext()
+                        
                         cell.imageView.image = flickrImage
                         cell.activityIndicator.hidden = true
                         cell.activityIndicator.stopAnimating()
@@ -285,7 +353,7 @@ class LocationViewController: UIViewController, UICollectionViewDelegate, UIColl
             case .Update:
                 print("Updating an item.")
                 updatedIndexPaths.append(indexPath!)
-                updatedIndexPaths.append(newIndexPath!)
+                //updatedIndexPaths.append(newIndexPath!)
                 break
             case .Move:
                 print("Moving an item.")
@@ -295,9 +363,34 @@ class LocationViewController: UIViewController, UICollectionViewDelegate, UIColl
     }
     
     func controllerDidChangeContent(controller: NSFetchedResultsController) {
-        insertedIndexPaths = [NSIndexPath]()
-        deletedIndexPaths = [NSIndexPath]()
-        updatedIndexPaths = [NSIndexPath]()
+        
+        self.collectionView.performBatchUpdates({() -> Void in
+            
+            for indexPath in self.insertedIndexPaths {
+                print("insertItem in controllerDidChangeContent")
+                self.collectionView.insertItemsAtIndexPaths([indexPath])
+            }
+        
+            for indexPath in self.deletedIndexPaths {
+                print("deleteItem in controllerDidChangeContent")
+                self.collectionView.deleteItemsAtIndexPaths([indexPath])
+            }
+        
+            for indexPath in self.updatedIndexPaths {
+                self.collectionView.reloadItemsAtIndexPaths([indexPath])
+            }
+        
+            }, completion: { (success) -> Void in
+                
+                if (success) {
+                    print("success")
+                    self.insertedIndexPaths = [NSIndexPath]()
+                    self.deletedIndexPaths = [NSIndexPath]()
+                    self.updatedIndexPaths = [NSIndexPath]()
+                    
+                }
+                
+        })
     }
     
 

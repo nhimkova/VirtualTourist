@@ -110,7 +110,17 @@
                                             <rect key="frame" x="0.0" y="0.0" width="99" height="105"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="uOh-a8-Xtx">
+                                                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="dom-QN-dyd">
+                                                    <rect key="frame" x="-10" y="-10" width="20" height="20"/>
+                                                </activityIndicatorView>
+                                                <view alpha="0.5" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Y90-c0-UQG">
+                                                    <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                                                    <color key="backgroundColor" red="1" green="0.4607120556" blue="0.54357222839999997" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <variation key="widthClass=compact" fixedFrame="YES">
+                                                        <rect key="frame" x="0.0" y="0.0" width="99" height="104"/>
+                                                    </variation>
+                                                </view>
+                                                <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="uOh-a8-Xtx">
                                                     <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="100" id="hd5-fd-SVc"/>
@@ -130,49 +140,45 @@
                                                         </mask>
                                                     </variation>
                                                 </imageView>
-                                                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="dom-QN-dyd">
-                                                    <rect key="frame" x="-10" y="-10" width="20" height="20"/>
-                                                    <variation key="widthClass=compact" misplaced="YES">
-                                                        <rect key="frame" x="31" y="36" width="37" height="37"/>
-                                                    </variation>
-                                                </activityIndicatorView>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
-                                        <color key="backgroundColor" red="0.0" green="0.24473049496644295" blue="0.50251677852348997" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
-                                            <constraint firstItem="uOh-a8-Xtx" firstAttribute="centerY" secondItem="Gpb-Jx-PuA" secondAttribute="centerY" id="Oc9-vf-0VF"/>
-                                            <constraint firstItem="dom-QN-dyd" firstAttribute="centerY" secondItem="Gpb-Jx-PuA" secondAttribute="centerY" id="PSE-Nv-LA9"/>
-                                            <constraint firstItem="uOh-a8-Xtx" firstAttribute="centerX" secondItem="Gpb-Jx-PuA" secondAttribute="centerX" id="qrG-c4-czZ"/>
-                                            <constraint firstItem="dom-QN-dyd" firstAttribute="centerX" secondItem="Gpb-Jx-PuA" secondAttribute="centerX" id="ss3-d1-kKP"/>
+                                            <constraint firstItem="dom-QN-dyd" firstAttribute="leading" secondItem="Gpb-Jx-PuA" secondAttribute="leadingMargin" constant="23" id="Sjx-sW-pBv"/>
+                                            <constraint firstItem="uOh-a8-Xtx" firstAttribute="top" secondItem="Gpb-Jx-PuA" secondAttribute="topMargin" constant="-8" id="Vfd-t9-kt6"/>
+                                            <constraint firstItem="uOh-a8-Xtx" firstAttribute="leading" secondItem="Gpb-Jx-PuA" secondAttribute="leadingMargin" constant="-8" id="nkA-dT-DIx"/>
+                                            <constraint firstItem="dom-QN-dyd" firstAttribute="top" secondItem="Gpb-Jx-PuA" secondAttribute="topMargin" constant="26" id="yOJ-QD-kDH"/>
                                         </constraints>
                                         <variation key="default">
                                             <mask key="subviews">
-                                                <exclude reference="uOh-a8-Xtx"/>
                                                 <exclude reference="dom-QN-dyd"/>
+                                                <exclude reference="Y90-c0-UQG"/>
+                                                <exclude reference="uOh-a8-Xtx"/>
                                             </mask>
                                             <mask key="constraints">
-                                                <exclude reference="Oc9-vf-0VF"/>
-                                                <exclude reference="qrG-c4-czZ"/>
-                                                <exclude reference="PSE-Nv-LA9"/>
-                                                <exclude reference="ss3-d1-kKP"/>
+                                                <exclude reference="Vfd-t9-kt6"/>
+                                                <exclude reference="nkA-dT-DIx"/>
+                                                <exclude reference="Sjx-sW-pBv"/>
+                                                <exclude reference="yOJ-QD-kDH"/>
                                             </mask>
                                         </variation>
                                         <variation key="widthClass=compact">
                                             <mask key="subviews">
-                                                <include reference="uOh-a8-Xtx"/>
                                                 <include reference="dom-QN-dyd"/>
+                                                <include reference="Y90-c0-UQG"/>
+                                                <include reference="uOh-a8-Xtx"/>
                                             </mask>
                                             <mask key="constraints">
-                                                <include reference="Oc9-vf-0VF"/>
-                                                <include reference="qrG-c4-czZ"/>
-                                                <include reference="PSE-Nv-LA9"/>
-                                                <include reference="ss3-d1-kKP"/>
+                                                <include reference="Vfd-t9-kt6"/>
+                                                <include reference="nkA-dT-DIx"/>
+                                                <include reference="Sjx-sW-pBv"/>
+                                                <include reference="yOJ-QD-kDH"/>
                                             </mask>
                                         </variation>
                                         <connections>
                                             <outlet property="activityIndicator" destination="dom-QN-dyd" id="X45-bZ-6tV"/>
                                             <outlet property="imageView" destination="uOh-a8-Xtx" id="0pu-wV-CIN"/>
+                                            <outlet property="overlay" destination="Y90-c0-UQG" id="14E-Wa-ghE"/>
                                         </connections>
                                     </collectionViewCell>
                                 </cells>
@@ -249,6 +255,7 @@
                     <connections>
                         <outlet property="collectionView" destination="lqQ-Ri-3FI" id="E0W-jG-bMO"/>
                         <outlet property="smallMapView" destination="QUS-NX-DPe" id="q3f-y5-dGv"/>
+                        <outlet property="toolBarButton" destination="FCN-NU-ZfL" id="kR5-wL-bo6"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="rep-Gd-xoD" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -274,4 +281,7 @@
             <point key="canvasLocation" x="318" y="-374"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="placeholder" width="600" height="400"/>
+    </resources>
 </document>
