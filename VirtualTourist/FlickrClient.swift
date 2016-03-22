@@ -47,7 +47,7 @@ class FlickrClient: NSObject {
         ]
         
         let urlString = Constants.BASE_URL + escapedParameters(parameters as! [String : AnyObject])
-        print(urlString)
+
         let url = NSURL(string: urlString)!
         
         let request = NSURLRequest(URL: url)
@@ -84,7 +84,7 @@ class FlickrClient: NSObject {
         ]
         
         let urlString = Constants.BASE_URL + escapedParameters(parameters as! [String : AnyObject])
-        print(urlString)
+
         let url = NSURL(string: urlString)!
         let request = NSURLRequest(URL: url)
         

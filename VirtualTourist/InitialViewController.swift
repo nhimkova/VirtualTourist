@@ -98,8 +98,8 @@ class InitialViewController: UIViewController, MKMapViewDelegate, NSFetchedResul
         }
         
         var span = MKCoordinateSpan()
-        span.latitudeDelta = latitudeDelta / 2.0
-        span.longitudeDelta = longitudeDelta / 2.0
+        span.latitudeDelta = latitudeDelta / 3.0
+        span.longitudeDelta = longitudeDelta / 3.0
         var region = MKCoordinateRegion()
         region.center = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
         region.span = span
@@ -108,7 +108,7 @@ class InitialViewController: UIViewController, MKMapViewDelegate, NSFetchedResul
         
         //Add long press gesture recognizer
         let longPress = UILongPressGestureRecognizer(target: self, action: "addPin:")
-        longPress.minimumPressDuration = 1.0
+        longPress.minimumPressDuration = 2.0
         mapView.addGestureRecognizer(longPress)
         
     }
@@ -216,6 +216,23 @@ class InitialViewController: UIViewController, MKMapViewDelegate, NSFetchedResul
             controller.thisPin = pin
             
             self.navigationController?.pushViewController(controller, animated: true)
+            
+        }
+        
+    }
+    
+    func mapView(mapView: MKMapView, didAddAnnotationViews views: [MKAnnotationView]) {
+        
+        for annotation in views {
+            
+            let endFrame = annotation.frame
+            annotation.frame = CGRectOffset(endFrame, 0, -500)
+            
+            UIView.animateWithDuration(1, animations: {
+            
+                annotation.frame = endFrame
+                
+            })
             
         }
         

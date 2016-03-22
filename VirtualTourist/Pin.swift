@@ -48,7 +48,6 @@ class Pin : NSManagedObject {
     
     class func generateID() -> String {
         let newID = NSUUID().UUIDString
-        print(newID)
         return newID
     }
     

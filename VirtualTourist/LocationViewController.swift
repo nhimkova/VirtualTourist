@@ -134,7 +134,6 @@ class LocationViewController: UIViewController, UICollectionViewDelegate, UIColl
                 selectedImages.append(selectedImage)
                 
                 // Delete Images on the local disk
-                print("URL to REMOVE: \(selectedImage.url)")
                 
                 let path = FlickrClient.Caches.imageCache.pathForIdentifier(selectedImage.url)
 
@@ -241,6 +240,8 @@ class LocationViewController: UIViewController, UICollectionViewDelegate, UIColl
             cell.overlay.hidden = true
         } else {
             selectedIndexes.append(indexPath)
+            cell.overlay.layer.cornerRadius = 6
+            cell.overlay.clipsToBounds = true
             cell.overlay.hidden = false
             cell.bringSubviewToFront(cell.overlay)
             cell.overlay.alpha = 0.8
@@ -260,6 +261,7 @@ class LocationViewController: UIViewController, UICollectionViewDelegate, UIColl
     
     func configCell(cell: ImageCollectionViewCell, image: Image) {
         
+        //UI
         cell.imageView.layer.cornerRadius = 6
         cell.imageView.clipsToBounds = true
         cell.imageView.hidden = false
@@ -353,7 +355,7 @@ class LocationViewController: UIViewController, UICollectionViewDelegate, UIColl
             case .Update:
                 print("Updating an item.")
                 updatedIndexPaths.append(indexPath!)
-                //updatedIndexPaths.append(newIndexPath!)
+                updatedIndexPaths.append(newIndexPath!)
                 break
             case .Move:
                 print("Moving an item.")

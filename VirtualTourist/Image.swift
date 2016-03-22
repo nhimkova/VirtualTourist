@@ -37,7 +37,7 @@ class Image : NSManagedObject {
         // Dictionary
         name = dictionary[Keys.Name] as! String
         url = dictionary[Keys.URL] as! String
-        print(url)
+
         
     }
     
@@ -56,7 +56,7 @@ class Image : NSManagedObject {
             let imageURL = NSURL(fileURLWithPath: url)
             let fileName = imageURL.lastPathComponent
             
-            print("store image \(fileName)")
+            print("store image \(fileName!)")
             
             FlickrClient.Caches.imageCache.storeImage(newValue, withIdentifier: fileName!)
         }

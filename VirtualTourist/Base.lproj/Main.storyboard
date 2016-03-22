@@ -116,8 +116,22 @@
                                                 <view alpha="0.5" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Y90-c0-UQG">
                                                     <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
                                                     <color key="backgroundColor" red="1" green="0.4607120556" blue="0.54357222839999997" alpha="1" colorSpace="calibratedRGB"/>
-                                                    <variation key="widthClass=compact" fixedFrame="YES">
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="100" id="4Bh-Qu-SNY"/>
+                                                        <constraint firstAttribute="height" constant="100" id="fxq-Q2-zqr"/>
+                                                    </constraints>
+                                                    <variation key="default">
+                                                        <mask key="constraints">
+                                                            <exclude reference="4Bh-Qu-SNY"/>
+                                                            <exclude reference="fxq-Q2-zqr"/>
+                                                        </mask>
+                                                    </variation>
+                                                    <variation key="widthClass=compact" misplaced="YES">
                                                         <rect key="frame" x="0.0" y="0.0" width="99" height="104"/>
+                                                        <mask key="constraints">
+                                                            <include reference="4Bh-Qu-SNY"/>
+                                                            <include reference="fxq-Q2-zqr"/>
+                                                        </mask>
                                                     </variation>
                                                 </view>
                                                 <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="uOh-a8-Xtx">
@@ -144,6 +158,8 @@
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
                                         <constraints>
+                                            <constraint firstItem="Y90-c0-UQG" firstAttribute="leading" secondItem="Gpb-Jx-PuA" secondAttribute="leadingMargin" constant="-8" id="72Y-fz-twE"/>
+                                            <constraint firstItem="Y90-c0-UQG" firstAttribute="top" secondItem="Gpb-Jx-PuA" secondAttribute="topMargin" constant="-8" id="PY9-3z-de2"/>
                                             <constraint firstItem="dom-QN-dyd" firstAttribute="leading" secondItem="Gpb-Jx-PuA" secondAttribute="leadingMargin" constant="23" id="Sjx-sW-pBv"/>
                                             <constraint firstItem="uOh-a8-Xtx" firstAttribute="top" secondItem="Gpb-Jx-PuA" secondAttribute="topMargin" constant="-8" id="Vfd-t9-kt6"/>
                                             <constraint firstItem="uOh-a8-Xtx" firstAttribute="leading" secondItem="Gpb-Jx-PuA" secondAttribute="leadingMargin" constant="-8" id="nkA-dT-DIx"/>
@@ -156,6 +172,8 @@
                                                 <exclude reference="uOh-a8-Xtx"/>
                                             </mask>
                                             <mask key="constraints">
+                                                <exclude reference="72Y-fz-twE"/>
+                                                <exclude reference="PY9-3z-de2"/>
                                                 <exclude reference="Vfd-t9-kt6"/>
                                                 <exclude reference="nkA-dT-DIx"/>
                                                 <exclude reference="Sjx-sW-pBv"/>
@@ -169,6 +187,8 @@
                                                 <include reference="uOh-a8-Xtx"/>
                                             </mask>
                                             <mask key="constraints">
+                                                <include reference="72Y-fz-twE"/>
+                                                <include reference="PY9-3z-de2"/>
                                                 <include reference="Vfd-t9-kt6"/>
                                                 <include reference="nkA-dT-DIx"/>
                                                 <include reference="Sjx-sW-pBv"/>
