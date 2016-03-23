@@ -207,6 +207,15 @@
                                     <outlet property="delegate" destination="vEF-iY-oyv" id="mPI-3O-Xk4"/>
                                 </connections>
                             </collectionView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No Images" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yml-0h-1Wo">
+                                <rect key="frame" x="-42" y="-21" width="42" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                                <variation key="widthClass=compact" misplaced="YES">
+                                    <rect key="frame" x="0.0" y="280" width="400" height="40"/>
+                                </variation>
+                            </label>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AKN-sc-g2J">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                                 <items>
@@ -223,10 +232,12 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="zOL-qV-rGp" firstAttribute="top" secondItem="AKN-sc-g2J" secondAttribute="bottom" id="0b6-zr-8OK"/>
+                            <constraint firstItem="yml-0h-1Wo" firstAttribute="centerX" secondItem="JFe-Zu-y3x" secondAttribute="centerX" id="5fH-a0-eyu"/>
                             <constraint firstItem="lqQ-Ri-3FI" firstAttribute="top" secondItem="QUS-NX-DPe" secondAttribute="bottom" constant="-1" id="9Nk-hk-oiG"/>
                             <constraint firstAttribute="trailingMargin" secondItem="QUS-NX-DPe" secondAttribute="trailing" constant="-20" id="FMe-dw-2pi"/>
                             <constraint firstItem="AKN-sc-g2J" firstAttribute="leading" secondItem="JFe-Zu-y3x" secondAttribute="leadingMargin" constant="-20" id="GQ1-xV-TgT"/>
                             <constraint firstAttribute="trailingMargin" secondItem="lqQ-Ri-3FI" secondAttribute="trailing" constant="-20" id="PYj-wN-Csk"/>
+                            <constraint firstItem="yml-0h-1Wo" firstAttribute="centerY" secondItem="JFe-Zu-y3x" secondAttribute="centerY" id="Whs-qt-fDH"/>
                             <constraint firstAttribute="trailingMargin" secondItem="AKN-sc-g2J" secondAttribute="trailing" constant="-20" id="d1o-Q2-M47"/>
                             <constraint firstItem="AKN-sc-g2J" firstAttribute="top" secondItem="lqQ-Ri-3FI" secondAttribute="bottom" id="dK5-9c-fKL"/>
                             <constraint firstItem="QUS-NX-DPe" firstAttribute="leading" secondItem="JFe-Zu-y3x" secondAttribute="leadingMargin" constant="-20" id="ea4-3N-lHK"/>
@@ -237,43 +248,50 @@
                             <mask key="subviews">
                                 <exclude reference="QUS-NX-DPe"/>
                                 <exclude reference="lqQ-Ri-3FI"/>
+                                <exclude reference="yml-0h-1Wo"/>
                                 <exclude reference="AKN-sc-g2J"/>
                             </mask>
                             <mask key="constraints">
-                                <exclude reference="0b6-zr-8OK"/>
-                                <exclude reference="GQ1-xV-TgT"/>
-                                <exclude reference="d1o-Q2-M47"/>
-                                <exclude reference="dK5-9c-fKL"/>
                                 <exclude reference="FMe-dw-2pi"/>
                                 <exclude reference="ea4-3N-lHK"/>
                                 <exclude reference="tcP-UM-wGO"/>
                                 <exclude reference="9Nk-hk-oiG"/>
                                 <exclude reference="PYj-wN-Csk"/>
                                 <exclude reference="j4O-9N-pcG"/>
+                                <exclude reference="5fH-a0-eyu"/>
+                                <exclude reference="Whs-qt-fDH"/>
+                                <exclude reference="GQ1-xV-TgT"/>
+                                <exclude reference="d1o-Q2-M47"/>
+                                <exclude reference="dK5-9c-fKL"/>
+                                <exclude reference="0b6-zr-8OK"/>
                             </mask>
                         </variation>
                         <variation key="widthClass=compact">
                             <mask key="subviews">
                                 <include reference="QUS-NX-DPe"/>
                                 <include reference="lqQ-Ri-3FI"/>
+                                <include reference="yml-0h-1Wo"/>
                                 <include reference="AKN-sc-g2J"/>
                             </mask>
                             <mask key="constraints">
-                                <include reference="0b6-zr-8OK"/>
-                                <include reference="GQ1-xV-TgT"/>
-                                <include reference="d1o-Q2-M47"/>
-                                <include reference="dK5-9c-fKL"/>
                                 <include reference="FMe-dw-2pi"/>
                                 <include reference="ea4-3N-lHK"/>
                                 <include reference="tcP-UM-wGO"/>
                                 <include reference="9Nk-hk-oiG"/>
                                 <include reference="PYj-wN-Csk"/>
                                 <include reference="j4O-9N-pcG"/>
+                                <include reference="5fH-a0-eyu"/>
+                                <include reference="Whs-qt-fDH"/>
+                                <include reference="GQ1-xV-TgT"/>
+                                <include reference="d1o-Q2-M47"/>
+                                <include reference="dK5-9c-fKL"/>
+                                <include reference="0b6-zr-8OK"/>
                             </mask>
                         </variation>
                     </view>
                     <connections>
                         <outlet property="collectionView" destination="lqQ-Ri-3FI" id="E0W-jG-bMO"/>
+                        <outlet property="noImageLabel" destination="yml-0h-1Wo" id="Bwc-B2-tlp"/>
                         <outlet property="smallMapView" destination="QUS-NX-DPe" id="q3f-y5-dGv"/>
                         <outlet property="toolBarButton" destination="FCN-NU-ZfL" id="kR5-wL-bo6"/>
                     </connections>

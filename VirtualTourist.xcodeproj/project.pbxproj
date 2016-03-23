@@ -53,6 +53,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		083B9E8B1CA28F5800F72EB1 /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				08861A531C9EB24D00D1E4CE /* InitialViewController.swift */,
+				08861A731C9F4AB800D1E4CE /* LocationViewController.swift */,
+				083B9E891CA09CC200F72EB1 /* ImageCollectionViewCell.swift */,
+			);
+			name = ViewController;
+			sourceTree = "<group>";
+		};
 		08861A451C9EB24C00D1E4CE = {
 			isa = PBXGroup;
 			children = (
@@ -72,13 +82,11 @@
 		08861A501C9EB24D00D1E4CE /* VirtualTourist */ = {
 			isa = PBXGroup;
 			children = (
-				08861A511C9EB24D00D1E4CE /* AppDelegate.swift */,
+				083B9E8B1CA28F5800F72EB1 /* ViewController */,
 				08861A691C9EB75800D1E4CE /* CoreData */,
 				08861A661C9EB46400D1E4CE /* Flickr */,
-				08861A531C9EB24D00D1E4CE /* InitialViewController.swift */,
-				08861A731C9F4AB800D1E4CE /* LocationViewController.swift */,
-				083B9E891CA09CC200F72EB1 /* ImageCollectionViewCell.swift */,
 				08861A551C9EB24D00D1E4CE /* Main.storyboard */,
+				08861A511C9EB24D00D1E4CE /* AppDelegate.swift */,
 				08861A5B1C9EB24D00D1E4CE /* Assets.xcassets */,
 				08861A5D1C9EB24D00D1E4CE /* LaunchScreen.storyboard */,
 				08861A601C9EB24D00D1E4CE /* Info.plist */,

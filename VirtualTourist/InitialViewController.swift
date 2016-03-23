@@ -97,6 +97,9 @@ class InitialViewController: UIViewController, MKMapViewDelegate, NSFetchedResul
             longitudeDelta = 0.5
         }
         
+        //MKCoordinateSpanMake
+        //MKCoordinateRegionMake
+        //CLLocationCoordinate2DMake
         var span = MKCoordinateSpan()
         span.latitudeDelta = latitudeDelta / 3.0
         span.longitudeDelta = longitudeDelta / 3.0
@@ -237,11 +240,6 @@ class InitialViewController: UIViewController, MKMapViewDelegate, NSFetchedResul
         }
         
     }
-    
-    // %%%%%%%%%%%%%%%        NSFetchedResultController Protocols       %%%%%%%%%%%%%%
-
-    
-    
     
 
 }

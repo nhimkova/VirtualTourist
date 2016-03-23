@@ -20,6 +20,8 @@ class LocationViewController: UIViewController, UICollectionViewDelegate, UIColl
     
     @IBOutlet var collectionView: UICollectionView!
     
+    @IBOutlet var noImageLabel: UILabel!
+    
     var thisPin : Pin?
 
     var selectedIndexes = [NSIndexPath]()
@@ -29,6 +31,8 @@ class LocationViewController: UIViewController, UICollectionViewDelegate, UIColl
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        noImageLabel.hidden = true
         
         configMap()
         
@@ -54,6 +58,8 @@ class LocationViewController: UIViewController, UICollectionViewDelegate, UIColl
     
     func searchFlickr() {
         
+        self.toolBarButton.enabled = false
+        
         FlickrClient.sharedInstance().taskForImageSearch((thisPin?.latitude)!, longitude: (thisPin?.longitude)!) { (result, error) in
             
             if (error != nil) {
@@ -66,25 +72,36 @@ class LocationViewController: UIViewController, UICollectionViewDelegate, UIColl
                     
                     if let photos = photosDictionary["photo"] as? [[String : AnyObject]] {
                         
-                        //Select random photos
-                        var selectedPhotos : [[String : AnyObject]] = []
-                        print("Total photos: \(photos.count)")
-                        let count = min(photos.count, 21)
+                            //Select random photos
+                            var selectedPhotos : [[String : AnyObject]] = []
+                            print("Total photos: \(photos.count)")
                         
-                        for _ in 0...count {
-                            let randomPhotoIndex = Int(arc4random_uniform(UInt32(photos.count)))
-                            
-                            selectedPhotos.append(photos[randomPhotoIndex])
-                            
-                        }
+                        if ( photos.count > 0 ) {
+                            let count = min(photos.count, 21)
                         
-                        let _ = selectedPhotos.map() { (dictionary: [String : AnyObject]) -> Image in
+                            for _ in 0...count {
+                                let randomPhotoIndex = Int(arc4random_uniform(UInt32(photos.count)))
+                            
+                                selectedPhotos.append(photos[randomPhotoIndex])
+                            
+                            }
+                        
+                            let _ = selectedPhotos.map() { (dictionary: [String : AnyObject]) -> Image in
                                             
-                            let image = Image(dictionary: dictionary, context: self.sharedContext)
-                            image.pin = self.thisPin
-                            return image
+                                let image = Image(dictionary: dictionary, context: self.sharedContext)
+                                image.pin = self.thisPin
+                                return image
+                            }
+                        
+                            self.toolBarButton.enabled = true
+                        } else {
+                            
+                            dispatch_async(dispatch_get_main_queue(), {
+                                
+                                self.noImageLabel.hidden = false
+                            })
                         }
-                                        
+                        
                     } // if let photos
 
                 } //photosDictionary
@@ -135,7 +152,8 @@ class LocationViewController: UIViewController, UICollectionViewDelegate, UIColl
                 
                 // Delete Images on the local disk
                 
-                let path = FlickrClient.Caches.imageCache.pathForIdentifier(selectedImage.url)
+                let imageURL = NSURL(string: selectedImage.url)
+                let path = FlickrClient.Caches.imageCache.pathForIdentifier((imageURL?.lastPathComponent)!)
 
                 do {
                     try NSFileManager.defaultManager().removeItemAtPath(path)
@@ -292,8 +310,6 @@ class LocationViewController: UIViewController, UICollectionViewDelegate, UIColl
                 } else {
                     
                     dispatch_async(dispatch_get_main_queue(), {
-                    
-                        self.toolBarButton.title = "New Collection"
                         
                         image.flickrResult = flickrImage
                         CoreDataStackManager.sharedInstance().saveContext()
@@ -395,5 +411,4 @@ class LocationViewController: UIViewController, UICollectionViewDelegate, UIColl
         })
     }
     
-
 }
