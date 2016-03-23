@@ -164,18 +164,20 @@ class InitialViewController: UIViewController, MKMapViewDelegate, NSFetchedResul
             privateContext.parentContext = sharedContext
             
             privateContext.performBlockAndWait {
-
+                
+                print("Pin object created in privateContext")
                 let _ = Pin(dictionary: dictionary, context: privateContext)
+                
+                do {
+                    //Save privateContext will move changes to to main queue
+                    print("save privateContext")
+                    try privateContext.save()
+                } catch {
+                    fatalError("Failure to save context: \(error)")
+                }
             }
             
-            do {
-                //Save privateContext will move changes to to main queue
-                print("save privateContext")
-                try privateContext.save()
-            } catch {
-                fatalError("Failure to save context: \(error)")
-            }
-        
+            
             print("New pin added to Core Data")
             
             print("save shared context")

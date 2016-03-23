@@ -86,19 +86,72 @@ class LocationViewController: UIViewController, UICollectionViewDelegate, UIColl
                             
                             }
                         
-                            let _ = selectedPhotos.map() { (dictionary: [String : AnyObject]) -> Image in
+                            let _ = selectedPhotos.map() { (dictionary: [String : AnyObject]) -> Void in
+                                
+                                //Core data concurrency
+                                //Create prive context as child of main context
+                                let privateContext = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
+                                privateContext.parentContext = self.sharedContext
+                                
+                                var image : Image? = nil
+                                
+                                privateContext.performBlockAndWait {
+                                    
+                                    print("Image object created in privateContext")
+                                    image = Image(dictionary: dictionary, context: privateContext)
+                                    
+                                    do {
+                                        //Save privateContext will move changes to sharedContext
+                                        print("save privateContext")
+                                        try privateContext.save()
+                                    } catch {
+                                        fatalError("Failure to save context: \(error)")
+                                    }
+                                    
+                                    self.sharedContext.performBlockAndWait{
+                                        
+                                        //Find image in sharedContext
+                                        let fetchRequest = NSFetchRequest(entityName: "Image")
+                                        
+                                        let name = image?.name
+                                        
+                                        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
+                                        fetchRequest.predicate = NSPredicate(format: "name == %@", name!);
+                                        
+                                        let fetchedThisImage = NSFetchedResultsController(fetchRequest: fetchRequest,
+                                            managedObjectContext: self.sharedContext,
+                                            sectionNameKeyPath: nil,
+                                            cacheName: nil)
+                                        
+                                        // Fetch
+                                        do {
+                                            try fetchedThisImage.performFetch()
+                                        } catch {}
+                                        
+                                        if (fetchedThisImage.fetchedObjects!.count > 0) {
                                             
-                                let image = Image(dictionary: dictionary, context: self.sharedContext)
-                                image.pin = self.thisPin
-                                return image
+                                            let sharedImage = fetchedThisImage.fetchedObjects![0] as! Image
+                                            sharedImage.pin = self.thisPin
+                                        } else {
+                                            
+                                            print("Cannot find image in shared context")
+                                        }
+                                        
+                                    }
+                                    
+                                }
+                                
                             }
-                        
-                            self.toolBarButton.enabled = true
+                            dispatch_async(dispatch_get_main_queue(), {
+                                self.toolBarButton.enabled = true
+                            })
+                            
                         } else {
                             
                             dispatch_async(dispatch_get_main_queue(), {
                                 
                                 self.noImageLabel.hidden = false
+                                self.toolBarButton.enabled = true
                             })
                         }
                         
@@ -201,6 +254,8 @@ class LocationViewController: UIViewController, UICollectionViewDelegate, UIColl
         return fetchedResultsController
         
     }()
+    
+    
 
     
     // %%%%%%%%%%%%%%%      CollectionView protocols      %%%%%%%%%%%%%%%
@@ -358,8 +413,8 @@ class LocationViewController: UIViewController, UICollectionViewDelegate, UIColl
                 break
             case .Update:
                 print("Updating an item.")
-                updatedIndexPaths.append(indexPath!)
-                updatedIndexPaths.append(newIndexPath!)
+                //updatedIndexPaths.append(indexPath!)
+                //updatedIndexPaths.append(newIndexPath!)
                 break
             case .Move:
                 print("Moving an item.")
