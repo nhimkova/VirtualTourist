@@ -32,6 +32,7 @@ class Pin : NSManagedObject {
         
         // Core Data
         let entity =  NSEntityDescription.entityForName("Pin", inManagedObjectContext: context)!
+        
         super.init(entity: entity, insertIntoManagedObjectContext: context)
         
         // Dictionary
@@ -39,9 +40,11 @@ class Pin : NSManagedObject {
         let long = dictionary[Keys.Longitude]
         let latFloat = Float(lat! as! NSNumber)
         let longFloat = Float(long! as! NSNumber)
-        latitude = latFloat
-        longitude = longFloat
-        id = dictionary[Keys.ID] as! String
+        self.latitude = latFloat
+        self.longitude = longFloat
+        self.id = dictionary[Keys.ID] as! String
+        
+       
     }
     
     //for generating id number

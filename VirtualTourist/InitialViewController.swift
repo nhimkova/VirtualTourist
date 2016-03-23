@@ -111,7 +111,7 @@ class InitialViewController: UIViewController, MKMapViewDelegate, NSFetchedResul
         
         //Add long press gesture recognizer
         let longPress = UILongPressGestureRecognizer(target: self, action: "addPin:")
-        longPress.minimumPressDuration = 2.0
+        longPress.minimumPressDuration = 1.0
         mapView.addGestureRecognizer(longPress)
         
     }
@@ -140,28 +140,47 @@ class InitialViewController: UIViewController, MKMapViewDelegate, NSFetchedResul
 
     func addPin(gestureRecognizer:UIGestureRecognizer) {
         
-        let touchPoint = gestureRecognizer.locationInView(self.mapView)
-        let newCoord:CLLocationCoordinate2D = mapView.convertPoint(touchPoint, toCoordinateFromView: self.mapView)
+        if gestureRecognizer.state == UIGestureRecognizerState.Began {
         
-        let id = Pin.generateID()
-        //Add pin to view
-        let newAnotation = MKPointAnnotation()
-        newAnotation.coordinate = newCoord
-        newAnotation.title = id
-        mapView.addAnnotation(newAnotation)
+            let touchPoint = gestureRecognizer.locationInView(self.mapView)
+            let newCoord:CLLocationCoordinate2D = mapView.convertPoint(touchPoint, toCoordinateFromView: self.mapView)
         
-        //Persist pin
-        let dictionary: [String : AnyObject] = [
-            Pin.Keys.ID : id,
-            Pin.Keys.Latitude : newAnotation.coordinate.latitude,
-            Pin.Keys.Longitude : newAnotation.coordinate.longitude
-        ]
+            let id = Pin.generateID()
+            //Add pin to view
+            let newAnotation = MKPointAnnotation()
+            newAnotation.coordinate = newCoord
+            newAnotation.title = id
+            mapView.addAnnotation(newAnotation)
+        
+            //Persist pin
+            let dictionary: [String : AnyObject] = [
+                Pin.Keys.ID : id,
+                Pin.Keys.Latitude : newAnotation.coordinate.latitude,
+                Pin.Keys.Longitude : newAnotation.coordinate.longitude
+            ]
+            
+            //Create prive context as child of main context
+            let privateContext = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
+            privateContext.parentContext = sharedContext
+            
+            privateContext.performBlockAndWait {
 
-        let _ = Pin(dictionary: dictionary, context: sharedContext)
+                let _ = Pin(dictionary: dictionary, context: privateContext)
+            }
+            
+            do {
+                //Save privateContext will move changes to to main queue
+                print("save privateContext")
+                try privateContext.save()
+            } catch {
+                fatalError("Failure to save context: \(error)")
+            }
         
-        print("New pin added to Core Data")
-        
-        CoreDataStackManager.sharedInstance().saveContext()
+            print("New pin added to Core Data")
+            
+            print("save shared context")
+            CoreDataStackManager.sharedInstance().saveContext()
+        }
         
     }
     
