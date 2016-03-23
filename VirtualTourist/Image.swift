@@ -61,6 +61,23 @@ class Image : NSManagedObject {
             FlickrClient.Caches.imageCache.storeImage(newValue, withIdentifier: fileName!)
         }
     }
+    
+    override func prepareForDeletion() {
+        
+        let imageURL = NSURL(string: url)
+        
+        print("delete image from local disk: \((imageURL?.lastPathComponent)!)")
+        
+        let path = FlickrClient.Caches.imageCache.pathForIdentifier((imageURL?.lastPathComponent)!)
+        
+        do {
+            try NSFileManager.defaultManager().removeItemAtPath(path)
+        }
+        catch let error as NSError {
+            print("Cannot delete file at path \(path) because \(error)")
+        }
+        
+    }
 
 
     

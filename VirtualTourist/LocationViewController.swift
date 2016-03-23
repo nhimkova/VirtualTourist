@@ -150,18 +150,6 @@ class LocationViewController: UIViewController, UICollectionViewDelegate, UIColl
                 let selectedImage = fetchedResultsController.objectAtIndexPath(indexPath) as! Image
                 selectedImages.append(selectedImage)
                 
-                // Delete Images on the local disk
-                
-                let imageURL = NSURL(string: selectedImage.url)
-                let path = FlickrClient.Caches.imageCache.pathForIdentifier((imageURL?.lastPathComponent)!)
-
-                do {
-                    try NSFileManager.defaultManager().removeItemAtPath(path)
-                }
-                catch let error as NSError {
-                    print("Cannot delete file at path \(path) because \(error)")
-                }
-                
             }
             
             for item in selectedImages {
